@@ -3,7 +3,7 @@ const jwt = require("jsonwebtoken")
 function isLoggedIn(req, res, next){
    try {
      if(!req.cookies.accessToken) return res.status(400).json({message: "You must be loggedIn "})
-     let data = jwt.verify(req.cookies.accessToken, process.env.ACCESS_TOKEN_SECRET)
+     let data = jwt.verify(req.cookies.accessToken, "lslsdlsdlsfndnvlsklskdssldsldsl")
     if(data){
      req.user = data
     }
