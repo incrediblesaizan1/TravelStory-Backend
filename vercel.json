@@ -21,6 +21,5 @@
   ],
   "env": {
     "NODE_ENV": "production"
-  },
-  "regions": ["cdg1", "sfo1", "hnd1"]
+  }
 }
