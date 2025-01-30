@@ -20,10 +20,15 @@ app.use(cors({ origin: "*" }));
 
 
 
-
-
 app.get("/",(req, res)=>{
     res.send("hello kkkss khan")
 })
+
+
+app.get("/user", (req, res)=>{
+    res.send("User is here")
+})
+
+
 
 app.listen(process.env.PORT)
