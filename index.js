@@ -245,9 +245,9 @@ app.post("/image-upload", isLoggedIn, multer.single("image") , (req, res)=>{
     } catch (error) {
       res.status(500).json({Error: true, message: error.message})
     }
-  })
+})
   
-  app.delete("/image-delete", isLoggedIn, async(req, res)=>{
+app.delete("/image-delete", isLoggedIn, async(req, res)=>{
     const {imageUrl} = req.query;
    
     if(!imageUrl){
@@ -270,7 +270,7 @@ app.post("/image-upload", isLoggedIn, multer.single("image") , (req, res)=>{
       res.status(500).json({error: true, message: error.message})
     }
   
-  })
+})
 
 
 app.listen(process.env.PORT || 3000);
