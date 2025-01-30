@@ -9,6 +9,7 @@ const cookieParser = require("cookie-parser");
 const UserModel = require("./models/user.model");
 const travelstoriesModel = require("./models/TravelStories.model");
 const isLoggedIn = require("./middelware/isLoggedIn.middleware");
+const multer = require("./multer")
 const fs = require("fs");
 const path = require("path");
 
