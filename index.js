@@ -7,7 +7,7 @@ const mongoose = require("mongoose")
 
 
 mongoose.connect(
-    `mongodb+srv://incrediblesaizan22:${process.env.MONGODB_KEY}@travelstories.y2ynt.mongodb.net/?retryWrites=true&w=majority&appName=TravelStories`
+    `mongodb+srv://incrediblesaizan22:U2ZhR6q4CZiHP736@travelstories.y2ynt.mongodb.net/?retryWrites=true&w=majority&appName=TravelStories`
   ).then(()=>{
     console.log("MongoDB connected successfully")
   }).catch(()=>{
@@ -23,7 +23,7 @@ app.use(cors({ origin: "*" }));
 
 
 app.get("/",(req, res)=>{
-    res.send("hello kkk khan")
+    res.send("hello kkkss khan")
 })
 
 app.listen(process.env.PORT)
