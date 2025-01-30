@@ -207,7 +207,7 @@ app.post("/edit-travelStory/:id", isLoggedIn, async(req, res)=>{
 })
 
 
-app.get("/get-all-travelStories", isLoggedIn, async(req,res)=>{
+app.get("/get-all-travelStories", async(req,res)=>{
     const {userId} = req.user;
   
      try {
@@ -217,7 +217,61 @@ app.get("/get-all-travelStories", isLoggedIn, async(req,res)=>{
       res.status(500).json({Error: true,message: error.message})
      }
   
+})
+
+
+app.get("/get-user-travelStories", isLoggedIn, async(req,res)=>{
+    const {userId} = req.user;
+  
+     try {
+      const travelStories = await travelstoriesModel.find({userId: userId})
+      res.status(200).json({stories: travelStories})
+     } catch (error) {
+      res.status(500).json({Error: true,message: error.message})
+     }
+  
+})
+
+
+app.post("/image-upload", isLoggedIn, multer.single("image") , (req, res)=>{
+    try {
+      if(!req.file){
+        return res.status(400).json({Error: true, message: "No Image Uploaded"})
+      }
+  
+      const imageUrl = `http://localhost:8000/uploads/${req.file.filename}`
+  
+      res.status(200).json({imageUrl})
+  
+    } catch (error) {
+      res.status(500).json({Error: true, message: error.message})
+    }
+  })
+  
+  app.delete("/image-delete", isLoggedIn, async(req, res)=>{
+    const {imageUrl} = req.query;
+   
+    if(!imageUrl){
+      return res.status(400).json({Error: true, message: "Image Url in parameters is required"})
+    }
+  
+    try {
+      const fileName = path.basename(imageUrl)
+       
+      const filePath = path.join(__dirname, "uploads", fileName)
+  
+      if(fs.existsSync(filePath)){
+        fs.unlinkSync(filePath)
+        res.status(200).json({message: "Image Deleted Successfully"})
+      }else{
+        res.status(200).json({Error: true, message: "Image not found"})
+      }
+  
+    } catch (error) {
+      res.status(500).json({error: true, message: error.message})
+    }
+  
   })
 
-
+  
 app.listen(process.env.PORT || 3000);
