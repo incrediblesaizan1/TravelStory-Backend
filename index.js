@@ -208,7 +208,6 @@ app.post("/edit-travelStory/:id", isLoggedIn, async(req, res)=>{
 
 
 app.get("/get-all-travelStories", async(req,res)=>{
-    const {userId} = req.user;
   
      try {
       const travelStories = await travelstoriesModel.find()
@@ -273,5 +272,5 @@ app.post("/image-upload", isLoggedIn, multer.single("image") , (req, res)=>{
   
   })
 
-  
+
 app.listen(process.env.PORT || 3000);
