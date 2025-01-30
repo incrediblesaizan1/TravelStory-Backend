@@ -7,7 +7,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const cookieParser = require("cookie-parser")
 const UserModel = require("./models/user.model")
-const travelStoryModel = require("./models/TravelStories.model")
+const travelstoriesModel = require("./models/TravelStories.model")
 const isLoggedIn = require("./middelware/isLoggedIn.middleware")
 const fs = require("fs")
 const path = require("path");
@@ -76,6 +76,39 @@ app.post("/signup", async (req, res) => {
     }
   });
 
+
+app.post("/login", async (req, res) => {
+    try {
+      const { identifier, password } = req.body;
+  
+      if (!identifier || !password) return res.status(400).json({Error: true, message: "All fields are required "});
+  
+      let user = await UserModel.findOne({
+        $or: [{ email: req.body.identifier }, { username: req.body.identifier }],
+      });
+      if (!user) return  res.status(400).json({ Error: true, message: "User not found" });
+  
+     const isPasswordValid = await bcrypt.compare(password, user.password)
+     if(!isPasswordValid){
+      return res.status(400).json({message: "Invalid Credentials"})
+     }
+  
+     const accessToken = jwt.sign(
+      { userId: user._id },
+      "lslsdlsdlsfndnvlsklskdssldsldsl"
+    );
+     
+    return res.cookie("accessToken", accessToken).status(200).json({
+      Error: false,
+      message: "You LoggedIn Successfully",
+      user: {fullname: user.fullname, email: user.email},
+    });
+  
+    } catch (error) {
+      console.log("Something went wrong while login user", error);
+      res.status(500).end("Something went wrong while login user");
+    }
+});
 
 
 app.listen(process.env.PORT || 3000)
