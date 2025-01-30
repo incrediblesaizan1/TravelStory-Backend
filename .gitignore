@@ -1,0 +1,71 @@
+# Dependencies
+node_modules/
+bower_components/
+vendor/
+*.gem
+package-lock.json
+yarn.lock
+
+# Environment files
+.env
+.env.*
+!.env.example
+.env.local
+.env.*.local
+
+# Build outputs
+dist/
+build/
+out/
+target/
+*.pyc
+__pycache__/
+*.class
+*.o
+*.so
+
+# IDE and editor files
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+logs/
+
+# Testing
+coverage/
+.nyc_output/
+.pytest_cache/
+junit.xml
+
+# Temporary files
+tmp/
+temp/
+.temp/
+*.tmp
+
+# Project specific
+.cache/
+.next/
+.nuxt/
+.serverless/
+.vercel/
+
+# Optional: Database files
+*.sqlite
+*.db
+
+# Optional: OS generated files
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
