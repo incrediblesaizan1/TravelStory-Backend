@@ -144,7 +144,6 @@ app.post("/travelStory", isLoggedIn, async (req, res) => {
     req.body;
   const { userId } = req.user;
   const user = await UserModel.findOne({ _id: userId });
-  console.log(user);
 
   if (
     !title ||
