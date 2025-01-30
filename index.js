@@ -7,7 +7,7 @@ app.use(express.urlencoded({extended: true}))
 
 
 app.get("/",(req, res)=>{
-    res.send("hello saizan khan")
+    res.send("hello  khan")
 })
 
 app.listen(process.env.PORT)
