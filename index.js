@@ -111,4 +111,20 @@ app.post("/login", async (req, res) => {
 });
 
 
+app.get("/user", isLoggedIn, async(req, res)=>{
+    const {userId} = req.user
+  
+    const isUser = await UserModel.findOne({_id: userId})
+    if(!isUser){
+   return res.status(401)
+    }
+     
+    return res.json({
+      user: isUser,
+      message: ""
+    })
+  
+  })
+
+
 app.listen(process.env.PORT || 3000)
