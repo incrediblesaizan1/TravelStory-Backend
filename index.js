@@ -179,4 +179,45 @@ app.post("/travelStory", isLoggedIn, async (req, res) => {
 });
 
 
+app.post("/edit-travelStory/:id", isLoggedIn, async(req, res)=>{
+
+    const {id} = req.params;
+    const {title, story, visitedLocation, imageUrl, visitedDate} = req.body;
+    const {userId} = req.user
+  
+    if(!title || !story || !visitedLocation  || !imageUrl || !visitedDate){
+      return res.status(400).json({Error: true, Message: "All fields are required"})
+    }
+  
+    const parsedVisitedDate = new Date(parseInt(visitedDate));
+  
+   try {
+    const travelStory = await travelstoriesModel.findOne({_id: id, userId: userId})
+  
+    if(!travelStory){
+      return res.status(404).json({Error: true, message: "Travel story not found"})
+    }
+  
+    
+  
+   } catch (error) {
+    
+   }
+    
+})
+
+
+app.get("/get-all-travelStories", isLoggedIn, async(req,res)=>{
+    const {userId} = req.user;
+  
+     try {
+      const travelStories = await travelstoriesModel.find()
+      res.status(200).json({stories: travelStories})
+     } catch (error) {
+      res.status(500).json({Error: true,message: error.message})
+     }
+  
+  })
+
+
 app.listen(process.env.PORT || 3000);
