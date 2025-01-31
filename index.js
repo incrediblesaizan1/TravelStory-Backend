@@ -323,9 +323,16 @@ app.put("/update-is-favourite/:id", isLoggedIn, async(req, res)=>{
 
   try {
     const travelStory = await travelstoriesModel.findOne({_id: id, userId: userId})
+    if(!travelStory){
+      return res.status(404).json({Error: true, message: "Travel story not found"})
+    }
+
+    travelStory.isFavourite = isFavourite
+    await travelStory.save()
+    res.status(200).json({story: travelStory, message:"Update successful"})
 
   } catch (error) {
-    
+    res.status(500).json({error: true, message: error.message})
   }
 
 })
