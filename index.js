@@ -365,4 +365,27 @@ app.get("/search", isLoggedIn, async(req, res)=>{
 
 })
 
+
+app.get("/travel-stories-filter", isLoggedIn, async(req, res)=>{
+
+  const {startDate, endDate } = req.query;
+  const {userId} = req.user;
+
+  try {
+    
+    const start = new Date(parseInt(startDate)) 
+    const end = new Date(parseInt(endDate))
+
+    const filterStories = await travelstoriesModel.find({
+      userId: userId,
+      visitedDate:{$gte: start, $lte: end},
+    }).sort({isFavourite: -1})
+
+    res.status(200).json({stories: filterStories})
+  } catch (error) {
+    res.status(500).json({error: true, message: error.message})
+  }
+
+})
+
 app.listen(process.env.PORT || 3000);
