@@ -180,7 +180,7 @@ app.post("/travelStory", isLoggedIn, async (req, res) => {
 });
 
 
-app.post("/edit-travelStory/:id", isLoggedIn, async(req, res)=>{
+app.put("/edit-travelStory/:id", isLoggedIn, async(req, res)=>{
 
   const {id} = req.params;
   const {title, story, visitedLocation, imageUrl, visitedDate} = req.body;
@@ -257,7 +257,7 @@ app.get("/get-all-travelStories", async(req,res)=>{
       res.status(500).json({Error: true,message: error.message})
      }
   
-})
+})  
 
 
 app.get("/get-user-travelStories", isLoggedIn, async(req,res)=>{
@@ -314,6 +314,6 @@ app.delete("/image-delete", isLoggedIn, async(req, res)=>{
 
 })
 
-
+app.put("/")
 
 app.listen(process.env.PORT || 3000);
