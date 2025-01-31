@@ -203,6 +203,7 @@ app.put("/edit-travelStory/:id", isLoggedIn, async(req, res)=>{
 
   travelStory.title = title;
   travelStory.story = story;
+  travelStory.visitedLocation = visitedLocation;
   travelStory.imageUrl = imageUrl ||  placeHolderImgUrl;
   travelStory.visitedDate = parsedVisitedDate
 
@@ -314,6 +315,19 @@ app.delete("/image-delete", isLoggedIn, async(req, res)=>{
 
 })
 
-app.put("/")
+
+app.put("/update-is-favourite/:id", isLoggedIn, async(req, res)=>{
+  const {id} = req.params
+  const {isFavourite} = req.body
+  const {userId} = req.user
+
+  try {
+    const travelStory = await travelstoriesModel.findOne({_id: id, userId: userId})
+
+  } catch (error) {
+    
+  }
+
+})
 
 app.listen(process.env.PORT || 3000);
