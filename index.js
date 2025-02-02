@@ -30,13 +30,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(
   cors({
-    origin: "http://localhost:5173", // Frontend URL for local development
-    credentials: true, // Allow cookies to be sent with cross-origin requests
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
+    origin: "http://localhost:5173", 
+    credentials: true, 
   })
 );
-
 app.use(cookieParser())
 
 
@@ -80,13 +77,7 @@ app.post("/signup", async (req, res) => {
     );
 
     return res
-      .cookie("accessToken", accessToken, {
-        httpOnly: true,
-        secure:false,
-        sameSite: "none",
-        path: "/",
-        maxAge: 24 * 60 * 60 * 1000 // 24 hours
-      })
+      .cookie("accessToken", accessToken)
       .status(200)
       .json({
         Error: false,
@@ -125,19 +116,14 @@ app.post("/login", async (req, res) => {
       "lslsdlsdlsfndnvlsklskdssldsldsl"
     );
 
-    res.cookie("accessToken", accessToken, {
-      httpOnly: true,
-      secure:false,
-      sameSite: "none",
-      path: "/",
-      maxAge: 24 * 60 * 60 * 1000 // 24 hours
-    });
-
-    return res.status(200).json({
-      Error: false,
-      message: "You LoggedIn Successfully",
-      user: { fullname: user.fullname, email: user.email },
-    });
+    return res
+      .cookie("accessToken", accessToken)
+      .status(200)
+      .json({
+        Error: false,
+        message: "You LoggedIn Successfully",
+        user: { fullname: user.fullname, email: user.email },
+      });
   } catch (error) {
     console.log("Something went wrong while login user", error);
     res.status(500).end("Something went wrong while login user");
