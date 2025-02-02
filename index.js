@@ -30,14 +30,16 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(
   cors({
-    origin: "https://incrediblesaizan1-travel-stories.vercel.app", 
+    origin: "http://localhost:5500", 
     credentials: true, 
   })
 );
+// app.use(cors())
 app.use(cookieParser())
 
 
 app.get("/", (req, res) => {
+  res.send("hello Saizan khan");
   res.json({message: "Hello how are you" });
 });
 
@@ -218,7 +220,7 @@ app.put("/edit-travelStory/:id", isLoggedIn, async(req, res)=>{
  } catch (error) {
   res.status(500).json({Error: true, message: error.message})
  }
-  
+
  })
 
 
@@ -226,10 +228,10 @@ app.put("/edit-travelStory/:id", isLoggedIn, async(req, res)=>{
  const {id} = req.params;
  const {userId} = req.user;
 
- 
+
 try {
    const travelStory = await travelstoriesModel.findOne({_id: id, userId: userId})
-  
+
    if(!travelStory){
      return res.status(404).json({Error: true, message: "Travel story not found"})
    }
@@ -255,27 +257,27 @@ try {
 
 
 app.get("/get-all-travelStories", async(req,res)=>{
-  
+
      try {
       const travelStories = await travelstoriesModel.find()
       res.status(200).json({stories: travelStories})
      } catch (error) {
       res.status(500).json({Error: true,message: error.message})
      }
-  
+
 })  
 
 
 app.get("/get-user-travelStories", isLoggedIn, async(req,res)=>{
     const {userId} = req.user;
-  
+
      try {
       const travelStories = await travelstoriesModel.find({userId: userId})
       res.status(200).json({stories: travelStories})
      } catch (error) {
       res.status(500).json({Error: true,message: error.message})
      }
-  
+
 })
 
 
@@ -284,27 +286,27 @@ app.post("/image-upload", isLoggedIn, multer.single("image") , (req, res)=>{
       if(!req.file){
         return res.status(400).json({Error: true, message: "No Image Uploaded"})
       }
-  
+
       const imageUrl = `http://localhost:8000/uploads/${req.file.filename}`
-  
+
       res.status(200).json({imageUrl})
-  
+
     } catch (error) {
       res.status(500).json({Error: true, message: error.message})
     }
 })
-  
+
 
 app.delete("/image-delete", isLoggedIn, async(req, res)=>{
   const {imageUrl} = req.query;
- 
+
   if(!imageUrl){
     return res.status(400).json({Error: true, message: "Image Url in parameters is required"})
   }
 
   try {
     const fileName = path.basename(imageUrl)
-     
+
     const filePath = path.join(__dirname, "uploads", fileName)
 
     if(fs.existsSync(filePath)){
@@ -351,7 +353,7 @@ app.get("/search", isLoggedIn, async(req, res)=>{
   if(!query){
     return res.status(404).json({Error: true, message: "query is required"})
   }
- 
+
 
   try {
     const searchResults = await travelstoriesModel.find({
@@ -377,7 +379,7 @@ app.get("/travel-stories-filter", isLoggedIn, async(req, res)=>{
   const {userId} = req.user;
 
   try {
-    
+
     const start = new Date(parseInt(startDate)) 
     const end = new Date(parseInt(endDate))
 
