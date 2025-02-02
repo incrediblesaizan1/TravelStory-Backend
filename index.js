@@ -30,14 +30,13 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(
   cors({
-    origin: process.env.NODE_ENV === "production" 
-      ? "https://incrediblesaizan1-travel-stories.vercel.app" 
-      : "http://localhost:5173",
-    credentials: true,
+    origin: "http://localhost:5173", // Frontend URL for local development
+    credentials: true, // Allow cookies to be sent with cross-origin requests
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
+
 app.use(cookieParser())
 
 
