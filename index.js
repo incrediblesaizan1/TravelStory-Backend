@@ -28,7 +28,12 @@ mongoose
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cors({ origin: "*" }));
+app.use(
+  cors({
+    origin: "http://localhost:5500", 
+    credentials: true, 
+  })
+);
 app.use(cookieParser())
 
 
