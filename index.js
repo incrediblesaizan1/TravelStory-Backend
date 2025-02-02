@@ -34,16 +34,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(
   cors({
-    origin: function (origin, callback) {
-      if (!origin) return callback(null, true);
-
-      if (allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS"));
-      }
-    },
-    credentials: true,
+    origin: allowedOrigins,
+    credentials: true,  // ✅ Allows cookies to be sent
   })
 );
 app.use(cookieParser())
@@ -129,13 +121,17 @@ app.post("/login", async (req, res) => {
     );
 
     return res
-      .cookie("accessToken", accessToken)
-      .status(200)
-      .json({
-        Error: false,
-        message: "You LoggedIn Successfully",
-        user: { fullname: user.fullname, email: user.email },
-      });
+    .cookie("accessToken", accessToken, {
+      httpOnly: true,
+      secure: true,   // ✅ Use `false` for localhost, `true` for production
+      sameSite: "none" // ✅ Required for cross-origin cookies
+    })
+    .status(200)
+    .json({
+      Error: false,
+      message: "You Logged In Successfully",
+      user: { fullname: user.fullname, email: user.email },
+    });
   } catch (error) {
     console.log("Something went wrong while login user", error);
     res.status(500).end("Something went wrong while login user");
