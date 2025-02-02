@@ -33,7 +33,7 @@ app.use(cookieParser())
 
 
 app.get("/", (req, res) => {
-  res.send("hello Saizan khan");
+  res.json({message: "Hello how are you" });
 });
 
 
