@@ -35,7 +35,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(
   cors({
     origin: allowedOrigins,
-    credentials: true,  // ✅ Allows cookies to be sent
+    credentials: true,  
   })
 );
 app.use(cookieParser())
@@ -123,8 +123,8 @@ app.post("/login", async (req, res) => {
     return res
     .cookie("accessToken", accessToken, {
       httpOnly: true,
-      secure: true,   // ✅ Use `false` for localhost, `true` for production
-      sameSite: "none" // ✅ Required for cross-origin cookies
+      secure: true,   // Use `false` for localhost, `true` for production
+      sameSite: "none" 
     })
     .status(200)
     .json({
