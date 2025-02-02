@@ -123,7 +123,7 @@ app.post("/login", async (req, res) => {
     return res
     .cookie("accessToken", accessToken, {
       httpOnly: true,
-      secure: true,   // ✅ Use `false` for localhost, `true` for production
+      secure: false,   // ✅ Use `false` for localhost, `true` for production
       sameSite: "none" // ✅ Required for cross-origin cookies
     })
     .status(200)
