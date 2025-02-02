@@ -30,7 +30,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(
   cors({
-    origin: "http://localhost:5500", 
+    origin: "https://incrediblesaizan1-travel-stories.vercel.app", 
     credentials: true, 
   })
 );
