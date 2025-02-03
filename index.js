@@ -42,8 +42,7 @@ app.use(cookieParser())
 
 
 app.get("/", (req, res) => {
-  res.send("hello Saizan khan");
-  res.json({message: "Hello how are you" });
+  res.json({message: "Hello Saizan khan, how are you" });
 });
 
 
@@ -81,7 +80,11 @@ app.post("/signup", async (req, res) => {
     );
 
     return res
-      .cookie("accessToken", accessToken)
+    .cookie("accessToken", accessToken, {
+      httpOnly: true,
+      secure: true,   // Use `false` for localhost, `true` for production
+      sameSite: "none" 
+    })
       .status(200)
       .json({
         Error: false,
