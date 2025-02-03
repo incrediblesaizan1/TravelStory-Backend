@@ -90,7 +90,6 @@ app.post("/signup", async (req, res) => {
 
     return res
     .cookie("accessToken", accessToken, {
-      
       secure: true,   // Use `false` for localhost, `true` for production
       sameSite: "none" 
     })
@@ -134,7 +133,6 @@ app.post("/login", async (req, res) => {
 
     return res
     .cookie("accessToken", accessToken, {
-      
       secure: true,   // Use `false` for localhost, `true` for production
       sameSite: "none" 
     })
@@ -153,7 +151,6 @@ app.post("/login", async (req, res) => {
 app.get("/logout", isLoggedIn, (req, res) => {
    res
   .cookie("accessToken", "", {
-    
     secure: true,   // Use `false` for localhost, `true` for production
     sameSite: "none" 
   })
