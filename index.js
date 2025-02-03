@@ -150,6 +150,9 @@ app.post("/login", async (req, res) => {
   }
 });
 
+app.get("/logout", isLoggedIn, (req, res) => {
+  res.clearCookie("accessToken");
+});
 
 app.get("/user", isLoggedIn, async (req, res) => {
   const { userId } = req.user;
@@ -413,5 +416,7 @@ app.get("/travel-stories-filter", isLoggedIn, async(req, res)=>{
   }
 
 })
+
+
 
 app.listen(process.env.PORT || 3000);
