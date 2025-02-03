@@ -151,12 +151,12 @@ app.post("/login", async (req, res) => {
 });
 
 app.get("/logout", isLoggedIn, (req, res) => {
-  res.clearCookie("accessToken", {
+   res
+  .cookie("accessToken", "", {
     httpOnly: true,
     secure: true,   // Use `false` for localhost, `true` for production
-    sameSite: "none"
-  });
-
+    sameSite: "none" 
+  })
   return res.status(200).json({ message: "You logged out successfully." });
 });
 
