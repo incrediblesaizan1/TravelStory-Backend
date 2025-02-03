@@ -152,6 +152,7 @@ app.post("/login", async (req, res) => {
 
 app.get("/logout", isLoggedIn, (req, res) => {
   res.clearCookie("accessToken");
+  res.json({message: "You logged out successfully."})
 });
 
 app.get("/user", isLoggedIn, async (req, res) => {
