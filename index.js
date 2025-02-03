@@ -27,11 +27,19 @@ mongoose
 
   const allowedOrigins = [
     "http://localhost:5173", 
+    "https://incrediblesaizan1-travel-stories.vercel.app", 
+    'https://incrediblesaizan1-travel-stories.vercel.app'
     "https://incrediblesaizan1-travel-stories.vercel.app"
   ];
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(
+  cors({
+    origin: allowedOrigins,
+    credentials: true,  
+  })
+);
 app.use((req, res, next) => {
   const origin = req.headers.origin;
   if (allowedOrigins.includes(origin)) {
@@ -44,7 +52,6 @@ app.use((req, res, next) => {
   if (req.method === "OPTIONS") {
     return res.sendStatus(200);
   }
-
   next();
 });
 app.use(cookieParser())
@@ -150,15 +157,6 @@ app.post("/login", async (req, res) => {
   }
 });
 
-app.get("/logout", isLoggedIn, (req, res) => {
-   res
-  .cookie("accessToken", "", {
-    httpOnly: true,
-    secure: true,   // Use `false` for localhost, `true` for production
-    sameSite: "none" 
-  })
-  return res.status(200).json({ message: "You logged out successfully." });
-});
 
 app.get("/user", isLoggedIn, async (req, res) => {
   const { userId } = req.user;
@@ -422,7 +420,3 @@ app.get("/travel-stories-filter", isLoggedIn, async(req, res)=>{
   }
 
 })
-
-
-
-app.listen(process.env.PORT || 3000);
