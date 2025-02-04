@@ -90,6 +90,7 @@ app.post("/signup", async (req, res) => {
 
     return res
     .cookie("accessToken", accessToken, {
+      httpOnly: true,
       secure: true,   // Use `false` for localhost, `true` for production
       sameSite: "none" 
     })
@@ -133,6 +134,7 @@ app.post("/login", async (req, res) => {
 
     return res
     .cookie("accessToken", accessToken, {
+      httpOnly: true,
       secure: true,   // Use `false` for localhost, `true` for production
       sameSite: "none" 
     })
@@ -148,14 +150,6 @@ app.post("/login", async (req, res) => {
   }
 });
 
-app.get("/logout", isLoggedIn, (req, res) => {
-   res
-  .cookie("accessToken", "", {
-    secure: true,   // Use `false` for localhost, `true` for production
-    sameSite: "none" 
-  })
-  return res.status(200).json({ message: "You logged out successfully." });
-});
 
 app.get("/user", isLoggedIn, async (req, res) => {
   const { userId } = req.user;
@@ -419,7 +413,5 @@ app.get("/travel-stories-filter", isLoggedIn, async(req, res)=>{
   }
 
 })
-
-
 
 app.listen(process.env.PORT || 3000);
