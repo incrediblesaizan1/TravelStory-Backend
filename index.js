@@ -150,6 +150,9 @@ app.post("/login", async (req, res) => {
   }
 });
 
+app.get("/logout", async(req,res)=>{
+  res.clearCookie("accessToken")
+})
 
 app.get("/user", isLoggedIn, async (req, res) => {
   const { userId } = req.user;
