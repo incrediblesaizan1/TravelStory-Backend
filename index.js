@@ -150,11 +150,11 @@ app.post("/login", async (req, res) => {
   }
 });
 
-app.get("/logout", async(req,res)=>{
-  res.cookie("accessToken", "",{
+app.get("/logout",isLoggedIn, async(req,res)=>{
+  res.cookie("accessToken", " ",{
     httpOnly: true,
-      secure: true,   // Use `false` for localhost, `true` for production
-      sameSite: "none" 
+    secure: true,   // Use `false` for localhost, `true` for production
+    sameSite: "none" 
   })
   res.json({message: "you logged out successfully."})
 })
