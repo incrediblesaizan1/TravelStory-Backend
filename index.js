@@ -299,7 +299,7 @@ app.get("/get-user-travelStories", isLoggedIn, async(req,res)=>{
     const {userId} = req.user;
 
      try {
-      const travelStories = await travelstoriesModel.find({userId: userId})
+      const travelStories = await travelstoriesModel.find({userId: userId}).sort({isFavourite: -1})
       res.status(200).json({stories: travelStories})
      } catch (error) {
       res.status(500).json({Error: true,message: error.message})
