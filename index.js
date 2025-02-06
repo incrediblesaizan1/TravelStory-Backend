@@ -317,11 +317,13 @@ app.post("/image-upload", async (req, res) => {
     }
 
     const imageFile = req.files.image;
+    console.log('Uploading:', imageFile.name); // Add debug log
+
     const result = await uploadToCloudinary(imageFile.data);
-    
     res.status(200).json({ imageUrl: result.url });
   } catch (error) {
-    res.status(500).json({ Error: true, message: error.message });
+    console.error('Upload Error:', error); // Improved logging
+    res.status(500).json({ Error: true, message: error.message || 'Unknown error occurred' });
   }
 });
 
