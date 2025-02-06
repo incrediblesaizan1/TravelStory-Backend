@@ -9,10 +9,10 @@ const cookieParser = require("cookie-parser");
 const UserModel = require("./models/user.model");
 const travelstoriesModel = require("./models/TravelStories.model");
 const isLoggedIn = require("./middelware/isLoggedIn.middleware");
-const multer = require("./multer")
 const fs = require("fs");
 const path = require("path");
-const upload = require("./multer")
+const fileUpload = require("express-fileupload")
+const uploadToCloudinary = require("./cloudinary")
 
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
@@ -33,6 +33,7 @@ mongoose
   ];
 
 app.use(express.json());
+app.use(fileUpload());
 app.use(express.urlencoded({ extended: true }));
 app.use(
   cors({
@@ -309,19 +310,20 @@ app.get("/get-user-travelStories", isLoggedIn, async(req,res)=>{
 })
 
 
-app.post("/image-upload", upload.single("image") , (req, res)=>{
-    try {
-      if(!req.file){
-        return res.status(400).json({Error: true, message: "No Image Uploaded"})
-      }
-
-      const imageUrl = `https://travelstorybackend.vercel.app/uploads/${req.file.filename}`
-      res.status(200).json({imageUrl})
-
-    } catch (error) {
-      res.status(500).json({Error: true, message: error.message})
+app.post("/image-upload", async (req, res) => {
+  try {
+    if (!req.files?.image) {
+      return res.status(400).json({ Error: true, message: "No Image Uploaded" });
     }
-})
+
+    const imageFile = req.files.image;
+    const result = await uploadToCloudinary(imageFile.data);
+    
+    res.status(200).json({ imageUrl: result.url });
+  } catch (error) {
+    res.status(500).json({ Error: true, message: error.message });
+  }
+});
 
 
 app.delete("/image-delete", isLoggedIn, async(req, res)=>{
