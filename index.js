@@ -175,7 +175,7 @@ app.get("/user", isLoggedIn, async (req, res) => {
 
 
 app.post("/travelStory", isLoggedIn, async (req, res) => {
-  const { title, story, visitedLocation, isFavourite, imageUrl, visitedDate } =
+  const { title, story, visitedLocation, imageUrl, visitedDate } =
     req.body;
   const { userId } = req.user;
   const user = await UserModel.findOne({ _id: userId });
@@ -184,7 +184,6 @@ app.post("/travelStory", isLoggedIn, async (req, res) => {
     !title ||
     !story ||
     !visitedLocation ||
-    !isFavourite ||
     !imageUrl ||
     !visitedDate
   ) {
