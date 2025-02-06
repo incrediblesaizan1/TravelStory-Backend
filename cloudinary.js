@@ -23,3 +23,5 @@ const uploadToCloudinary = async (buffer) => {
     uploadStream.end(buffer);
   });
 };
+
+module.exports = uploadToCloudinary
