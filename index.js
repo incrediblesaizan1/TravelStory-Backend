@@ -317,7 +317,6 @@ app.post("/image-upload", async (req, res) => {
     }
 
     const imageFile = req.files.image;
-    console.log('Uploading:', imageFile.name); // Add debug log
 
     const result = await uploadToCloudinary(imageFile.data);
     res.status(200).json({ imageUrl: result.url });
