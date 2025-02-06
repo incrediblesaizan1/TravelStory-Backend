@@ -12,7 +12,9 @@ const isLoggedIn = require("./middelware/isLoggedIn.middleware");
 const multer = require("./multer")
 const fs = require("fs");
 const path = require("path");
+const upload = require("./multer")
 
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 mongoose
   .connect(
@@ -307,14 +309,13 @@ app.get("/get-user-travelStories", isLoggedIn, async(req,res)=>{
 })
 
 
-app.post("/image-upload", isLoggedIn, multer.single("image") , (req, res)=>{
+app.post("/image-upload", upload.single("image") , (req, res)=>{
     try {
       if(!req.file){
         return res.status(400).json({Error: true, message: "No Image Uploaded"})
       }
 
-      const imageUrl = `http://localhost:8000/uploads/${req.file.filename}`
-
+      const imageUrl = `https://travelstorybackend.vercel.app/uploads/${req.file.filename}`
       res.status(200).json({imageUrl})
 
     } catch (error) {
