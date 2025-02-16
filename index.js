@@ -28,7 +28,7 @@ mongoose
   });
 
   const allowedOrigins = [
-    "http://localhost:5173",
+    // "http://localhost:5173",
     "http://192.168.29.222",
     "https://incrediblesaizan1-travel-stories.vercel.app",
   ];
