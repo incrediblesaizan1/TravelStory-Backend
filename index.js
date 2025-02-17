@@ -11,10 +11,10 @@ const travelstoriesModel = require("./models/TravelStories.model");
 const isLoggedIn = require("./middelware/isLoggedIn.middleware");
 const fs = require("fs");
 const path = require("path");
-const fileUpload = require("express-fileupload")
-const uploadToCloudinary = require("./cloudinary")
+const fileUpload = require("express-fileupload");
+const uploadToCloudinary = require("./cloudinary");
 
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 mongoose
   .connect(
@@ -27,11 +27,11 @@ mongoose
     console.log("MongoDB connection error:", error);
   });
 
-  const allowedOrigins = [
-    "http://localhost:5173",
-    "http://localhost:5174",
-    "https://incrediblesaizan1-travel-stories.vercel.app",
-  ];
+const allowedOrigins = [
+  "http://localhost:5173",
+  "http://localhost:5174",
+  "https://incrediblesaizan1-travel-stories.vercel.app",
+];
 
 app.use(express.json());
 app.use(fileUpload());
@@ -45,19 +45,17 @@ app.use(
         callback(new Error("Not allowed by CORS"));
       }
     },
-    credentials: true, 
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], 
-    allowedHeaders: ["Content-Type", "Authorization"], 
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
-app.use(cookieParser())
-app.options("*", cors())
-
+app.use(cookieParser());
+app.options("*", cors());
 
 app.get("/", (req, res) => {
-  res.json({message: "Hello Saizan khan, how are you" });
+  res.json({ message: "Hello Saizan khan, how are you" });
 });
-
 
 app.post("/signup", async (req, res) => {
   try {
@@ -93,11 +91,11 @@ app.post("/signup", async (req, res) => {
     );
 
     return res
-    .cookie("accessToken", accessToken, {
-      httpOnly: true,
-      secure: true,   // Use `false` for localhost, `true` for production
-      sameSite: "none" 
-    })
+      .cookie("accessToken", accessToken, {
+        httpOnly: true,
+        secure: true, // Use `false` for localhost, `true` for production
+        sameSite: "none",
+      })
       .status(200)
       .json({
         Error: false,
@@ -109,7 +107,6 @@ app.post("/signup", async (req, res) => {
     res.status(500).json("Something went wrong while registering user");
   }
 });
-
 
 app.post("/login", async (req, res) => {
   try {
@@ -137,31 +134,31 @@ app.post("/login", async (req, res) => {
     );
 
     return res
-    .cookie("accessToken", accessToken, {
-      httpOnly: true,
-      secure: true,   // Use `false` for localhost, `true` for production
-      sameSite: "none" 
-    })
-    .status(200)
-    .json({
-      Error: false,
-      message: "You Logged In Successfully",
-      user: { fullname: user.fullname, email: user.email },
-    });
+      .cookie("accessToken", accessToken, {
+        httpOnly: true,
+        secure: true, // Use `false` for localhost, `true` for production
+        sameSite: "none",
+      })
+      .status(200)
+      .json({
+        Error: false,
+        message: "You Logged In Successfully",
+        user: { fullname: user.fullname, email: user.email },
+      });
   } catch (error) {
     console.log("Something went wrong while login user", error);
     res.status(500).end("Something went wrong while login user");
   }
 });
 
-app.get("/logout",isLoggedIn, async(req,res)=>{
-  res.cookie("accessToken", " ",{
+app.get("/logout", isLoggedIn, async (req, res) => {
+  res.cookie("accessToken", " ", {
     httpOnly: true,
-    secure: true,   // Use `false` for localhost, `true` for production
-    sameSite: "none" 
-  })
-  res.json({message: "you logged out successfully."})
-})
+    secure: true, // Use `false` for localhost, `true` for production
+    sameSite: "none",
+  });
+  res.json({ message: "you logged out successfully." });
+});
 
 app.get("/user", isLoggedIn, async (req, res) => {
   const { userId } = req.user;
@@ -177,20 +174,24 @@ app.get("/user", isLoggedIn, async (req, res) => {
   });
 });
 
+app.get("/user/:id", async (req, res) => {
+  const { id } = req.params;
+  const findUser = await UserModel.findOne({ _id: id });
+  if (!findUser) {
+    return res.status(401);
+  }
+  return res.json({
+    user: findUser,
+    message: "",
+  });
+});
 
 app.post("/travelStory", isLoggedIn, async (req, res) => {
-  const { title, story, visitedLocation, imageUrl, visitedDate } =
-    req.body;
+  const { title, story, visitedLocation, imageUrl, visitedDate } = req.body;
   const { userId } = req.user;
   const user = await UserModel.findOne({ _id: userId });
 
-  if (
-    !title ||
-    !story ||
-    !visitedLocation ||
-    !imageUrl ||
-    !visitedDate
-  ) {
+  if (!title || !story || !visitedLocation || !imageUrl || !visitedDate) {
     return res
       .status(400)
       .json({ Error: true, Message: "All fields are required" });
@@ -216,105 +217,110 @@ app.post("/travelStory", isLoggedIn, async (req, res) => {
   }
 });
 
+app.put("/edit-travelStory/:id", isLoggedIn, async (req, res) => {
+  const { id } = req.params;
+  const { title, story, visitedLocation, imageUrl, visitedDate } = req.body;
+  const { userId } = req.user;
 
-app.put("/edit-travelStory/:id", isLoggedIn, async(req, res)=>{
-
-  const {id} = req.params;
-  const {title, story, visitedLocation, imageUrl, visitedDate} = req.body;
-  const {userId} = req.user
-
-  if(!title || !story || !visitedLocation  || !imageUrl || !visitedDate){
-    return res.status(400).json({Error: true, Message: "All fields are required"})
+  if (!title || !story || !visitedLocation || !imageUrl || !visitedDate) {
+    return res
+      .status(400)
+      .json({ Error: true, Message: "All fields are required" });
   }
 
   const parsedVisitedDate = new Date(parseInt(visitedDate));
 
- try {
-  const travelStory = await travelstoriesModel.findOne({_id: id, userId: userId})
+  try {
+    const travelStory = await travelstoriesModel.findOne({
+      _id: id,
+      userId: userId,
+    });
 
-  if(!travelStory){
-    return res.status(404).json({Error: true, message: "Travel story not found"})
-  }
-
-  const placeHolderImgUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTS7c-zKeZDyCPmpNh8li9OMWH4KIBlagiu5w&s"
-
-  travelStory.title = title;
-  travelStory.story = story;
-  travelStory.visitedLocation = visitedLocation;
-  travelStory.imageUrl = imageUrl ||  placeHolderImgUrl;
-  travelStory.visitedDate = parsedVisitedDate
-
-  await travelStory.save()
-  res.status(200).json({story: travelStory, message :"update successfully"})
-
- } catch (error) {
-  res.status(500).json({Error: true, message: error.message})
- }
-
- })
-
-
- app.delete("/delete-travelStory/:id", isLoggedIn, async(req, res)=>{
- const {id} = req.params;
- const {userId} = req.user;
-
-
-try {
-   const travelStory = await travelstoriesModel.findOne({_id: id, userId: userId})
-
-   if(!travelStory){
-     return res.status(404).json({Error: true, message: "Travel story not found"})
-   }
-
-   await travelStory.deleteOne({_id: id, userId: userId})
-
-   const imageUrl = travelStory.imageUrl;
-   const filename = path.basename(imageUrl)
-
-   const filepath = path.join(__dirname, "uploads", filename)
-   fs.unlink(filepath, (err)=>{
-    if(err){
-      console.error("Failed to delete image file:", err)
+    if (!travelStory) {
+      return res
+        .status(404)
+        .json({ Error: true, message: "Travel story not found" });
     }
-   })
-   res.status(200).json({message: "Travel story deleted successfully"})
 
-} catch (error) {
-  res.status(400).json({ Error: true, message: error.message });
-}
+    const placeHolderImgUrl =
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTS7c-zKeZDyCPmpNh8li9OMWH4KIBlagiu5w&s";
 
- })
+    travelStory.title = title;
+    travelStory.story = story;
+    travelStory.visitedLocation = visitedLocation;
+    travelStory.imageUrl = imageUrl || placeHolderImgUrl;
+    travelStory.visitedDate = parsedVisitedDate;
 
+    await travelStory.save();
+    res
+      .status(200)
+      .json({ story: travelStory, message: "update successfully" });
+  } catch (error) {
+    res.status(500).json({ Error: true, message: error.message });
+  }
+});
 
-app.get("/get-all-travelStories", async(req,res)=>{
+app.delete("/delete-travelStory/:id", isLoggedIn, async (req, res) => {
+  const { id } = req.params;
+  const { userId } = req.user;
 
-     try {
-      const travelStories = await travelstoriesModel.find()
-      res.status(200).json({stories: travelStories})
-     } catch (error) {
-      res.status(500).json({Error: true,message: error.message})
-     }
+  try {
+    const travelStory = await travelstoriesModel.findOne({
+      _id: id,
+      userId: userId,
+    });
 
-})  
+    if (!travelStory) {
+      return res
+        .status(404)
+        .json({ Error: true, message: "Travel story not found" });
+    }
 
+    await travelStory.deleteOne({ _id: id, userId: userId });
 
-app.get("/get-user-travelStories", isLoggedIn, async(req,res)=>{
-    const {userId} = req.user;
+    const imageUrl = travelStory.imageUrl;
+    const filename = path.basename(imageUrl);
 
-     try {
-      const travelStories = await travelstoriesModel.find({userId: userId}).sort({isFavourite: 1})
-      res.status(200).json({stories: travelStories})
-     } catch (error) {
-      res.status(500).json({Error: true,message: error.message})
-     }
+    const filepath = path.join(__dirname, "uploads", filename);
+    fs.unlink(filepath, (err) => {
+      if (err) {
+        console.error("Failed to delete image file:", err);
+      }
+    });
+    res.status(200).json({ message: "Travel story deleted successfully" });
+  } catch (error) {
+    res.status(400).json({ Error: true, message: error.message });
+  }
+});
 
-})
+app.get("/get-all-travelStories", async (req, res) => {
+  try {
+    const travelStories = await travelstoriesModel.find();
+    res.status(200).json({ stories: travelStories });
+  } catch (error) {
+    res.status(500).json({ Error: true, message: error.message });
+  }
+});
 
+app.get("/get-user-travelStories", isLoggedIn, async (req, res) => {
+  const { userId } = req.user;
+
+  try {
+    const travelStories = await travelstoriesModel
+      .find({ userId: userId })
+      .sort({ isFavourite: 1 });
+    res.status(200).json({ stories: travelStories });
+  } catch (error) {
+    res.status(500).json({ Error: true, message: error.message });
+  }
+});
 
 app.post("/image-upload", async (req, res) => {
   try {
     if (!req.files?.image) {
-      return res.status(400).json({ Error: true, message: "No Image Uploaded" });
+      return res
+        .status(400)
+        .json({ Error: true, message: "No Image Uploaded" });
     }
 
     const imageFile = req.files.image;
@@ -322,108 +328,110 @@ app.post("/image-upload", async (req, res) => {
     const result = await uploadToCloudinary(imageFile.data);
     res.status(200).json({ imageUrl: result.url });
   } catch (error) {
-    console.error('Upload Error:', error); // Improved logging
-    res.status(500).json({ Error: true, message: error.message || 'Unknown error occurred' });
+    console.error("Upload Error:", error); // Improved logging
+    res
+      .status(500)
+      .json({
+        Error: true,
+        message: error.message || "Unknown error occurred",
+      });
   }
 });
 
+app.delete("/image-delete", isLoggedIn, async (req, res) => {
+  const { imageUrl } = req.query;
 
-app.delete("/image-delete", isLoggedIn, async(req, res)=>{
-  const {imageUrl} = req.query;
-
-  if(!imageUrl){
-    return res.status(400).json({Error: true, message: "Image Url in parameters is required"})
+  if (!imageUrl) {
+    return res
+      .status(400)
+      .json({ Error: true, message: "Image Url in parameters is required" });
   }
 
   try {
-    const fileName = path.basename(imageUrl)
+    const fileName = path.basename(imageUrl);
 
-    const filePath = path.join(__dirname, "uploads", fileName)
+    const filePath = path.join(__dirname, "uploads", fileName);
 
-    if(fs.existsSync(filePath)){
-      fs.unlinkSync(filePath)
-      res.status(200).json({message: "Image Deleted Successfully"})
-    }else{
-      res.status(200).json({Error: true, message: "Image not found"})
+    if (fs.existsSync(filePath)) {
+      fs.unlinkSync(filePath);
+      res.status(200).json({ message: "Image Deleted Successfully" });
+    } else {
+      res.status(200).json({ Error: true, message: "Image not found" });
+    }
+  } catch (error) {
+    res.status(500).json({ error: true, message: error.message });
+  }
+});
+
+app.put("/update-is-favourite/:id", isLoggedIn, async (req, res) => {
+  const { id } = req.params;
+  const { isFavourite } = req.body;
+  const { userId } = req.user;
+
+  try {
+    const travelStory = await travelstoriesModel.findOne({
+      _id: id,
+      userId: userId,
+    });
+    if (!travelStory) {
+      return res
+        .status(404)
+        .json({ Error: true, message: "Travel story not found" });
     }
 
+    travelStory.isFavourite = isFavourite;
+    await travelStory.save();
+    res.status(200).json({ story: travelStory, message: "Update successful" });
   } catch (error) {
-    res.status(500).json({error: true, message: error.message})
+    res.status(500).json({ error: true, message: error.message });
   }
+});
 
-})
+app.get("/search", isLoggedIn, async (req, res) => {
+  const { query } = req.query;
+  const { userId } = req.user;
 
-
-app.put("/update-is-favourite/:id", isLoggedIn, async(req, res)=>{
-  const {id} = req.params
-  const {isFavourite} = req.body
-  const {userId} = req.user
+  if (!query) {
+    return res.status(404).json({ Error: true, message: "query is required" });
+  }
 
   try {
-    const travelStory = await travelstoriesModel.findOne({_id: id, userId: userId})
-    if(!travelStory){
-      return res.status(404).json({Error: true, message: "Travel story not found"})
-    }
+    const searchResults = await travelstoriesModel
+      .find({
+        userId: userId,
+        $or: [
+          { title: { $regex: query, $options: "i" } },
+          { story: { $regex: query, $options: "i" } },
+          { visitedLocation: { $regex: query, $options: "i" } },
+        ],
+      })
+      .sort({ isFavourite: -1 });
 
-    travelStory.isFavourite = isFavourite
-    await travelStory.save()
-    res.status(200).json({story: travelStory, message:"Update successful"})
-
+    res.status(200).json({ stories: searchResults });
   } catch (error) {
-    res.status(500).json({error: true, message: error.message})
+    res.status(500).json({ error: true, message: error.message });
   }
+});
 
-})
-
-
-app.get("/search", isLoggedIn, async(req, res)=>{
-  const {query} = req.query
-  const {userId} = req.user;
-
-
-  if(!query){
-    return res.status(404).json({Error: true, message: "query is required"})
-  }
-
+app.get("/travel-stories-filter", isLoggedIn, async (req, res) => {
+  const { startDate, endDate } = req.query;
+  const { userId } = req.user;
 
   try {
-    const searchResults = await travelstoriesModel.find({
-      userId: userId,
-      $or: [
-        {title: {$regex: query, $options:"i"}},
-        {story: {$regex: query, $options:"i"}},
-        {visitedLocation: {$regex: query, $options:"i"}}
-      ],
-    }).sort({isFavourite: -1})
+    const start = new Date(parseInt(startDate));
+    const end = new Date(parseInt(endDate));
 
-    res.status(200).json({stories: searchResults})
+    const filterStories = await travelstoriesModel
+      .find({
+        userId: userId,
+        visitedDate: { $gte: start, $lte: end },
+      })
+      .sort({ isFavourite: -1 });
+
+    res.status(200).json({ stories: filterStories });
   } catch (error) {
-    res.status(500).json({error: true, message: error.message})
+    res.status(500).json({ error: true, message: error.message });
   }
-
-})
-
-
-app.get("/travel-stories-filter", isLoggedIn, async(req, res)=>{
-
-  const {startDate, endDate } = req.query;
-  const {userId} = req.user;
-
-  try {
-
-    const start = new Date(parseInt(startDate)) 
-    const end = new Date(parseInt(endDate))
-
-    const filterStories = await travelstoriesModel.find({
-      userId: userId,
-      visitedDate:{$gte: start, $lte: end},
-    }).sort({isFavourite: -1})
-
-    res.status(200).json({stories: filterStories})
-  } catch (error) {
-    res.status(500).json({error: true, message: error.message})
-  }
-
-})
+});
 
 app.listen(process.env.PORT || 3000);
