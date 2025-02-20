@@ -344,11 +344,6 @@ app.post("/image-upload", async (req, res) => {
 app.post("/dp",isLoggedIn, async (req, res) => {
   try {
     
-    // const user = await UserModel.findOneAndUpdate({
-    //   _id: req.user.id,
-    //   dp: result.url
-    // });
-
     const user = await userModel.findOne({
       id: req.user.id
     })
