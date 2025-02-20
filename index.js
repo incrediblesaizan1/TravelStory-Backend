@@ -369,33 +369,6 @@ app.post("/dp",isLoggedIn, async (req, res) => {
   }
 
 
-  try {
-    
-
-    if (!travelStory) {
-      return res
-        .status(404)
-        .json({ Error: true, message: "Travel story not found" });
-    }
-
-    const placeHolderImgUrl =
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTS7c-zKeZDyCPmpNh8li9OMWH4KIBlagiu5w&s";
-
-    travelStory.title = title;
-    travelStory.story = story;
-    travelStory.visitedLocation = visitedLocation;
-    travelStory.imageUrl = imageUrl || placeHolderImgUrl;
-    travelStory.visitedDate = parsedVisitedDate;
-
-    await travelStory.save();
-    res
-      .status(200)
-      .json({ story: travelStory, message: "update successfully" });
-  } catch (error) {
-    res.status(500).json({ Error: true, message: error.message });
-  }
-
-
 });
 
 app.delete("/image-delete", isLoggedIn, async (req, res) => {
