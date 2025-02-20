@@ -344,7 +344,7 @@ app.post("/image-upload", async (req, res) => {
 app.post("/dp", isLoggedIn, async (req, res) => {
   try {
     if (!req.files || !req.files.image) {
-      const user = await userModel.findOne({ id: req.user.id });
+      const user = await UserModel.findOne({ _id: req.user.userId });
       if (user) {
         user.dp = "";
         await user.save();
@@ -355,7 +355,7 @@ app.post("/dp", isLoggedIn, async (req, res) => {
     const imageFile = req.files.image;
     const result = await uploadToCloudinary(imageFile.data);
 
-    const user = await userModel.findOne({ id: req.user.id });
+    const user = await UserModel.findOne({ _id: req.user.userId });
 
     if (user) {
       user.dp = result.url;
