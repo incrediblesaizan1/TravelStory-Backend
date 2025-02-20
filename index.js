@@ -331,7 +331,7 @@ app.post("/image-upload", async (req, res) => {
     const result = await uploadToCloudinary(imageFile.data);
     res.status(200).json({ imageUrl: result.url });
   } catch (error) {
-    console.error("Upload Error:", error); // Improved logging
+    console.error("Upload Error:", error);
     res
       .status(500)
       .json({
