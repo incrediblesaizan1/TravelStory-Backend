@@ -343,22 +343,29 @@ app.post("/image-upload", async (req, res) => {
 
 app.post("/dp",isLoggedIn, async (req, res) => {
   try {
-    if (!req.files?.image) {
-      return res
-        .status(400)
-        .json({ Error: true, message: "No Image Uploaded" });
+    
+    // const user = await UserModel.findOneAndUpdate({
+    //   _id: req.user.id,
+    //   dp: result.url
+    // });
+
+    const user = await userModel.findOne({
+      id: req.user.id
+    })
+
+    if (!req.files || !req.files.image) {
+      user.dp = ""; 
+      await user.save();
+      return res.status(200).json({ imageUrl: "" });
     }
 
     const imageFile = req.files.image;
 
     const result = await uploadToCloudinary(imageFile.data);
 
-    const user = await UserModel.findOneAndUpdate({
-      _id: req.user.id,
-      dp: result.url
-    });
+    user.dp = result.url
     
-    await user.save()
+    await user.save() 
     
 
     res.status(200).json({ imageUrl: result.url });
