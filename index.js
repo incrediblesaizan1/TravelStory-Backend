@@ -357,10 +357,7 @@ app.post("/dp",isLoggedIn, async (req, res) => {
       _id: req.user.id,
       dp: result.url
     });
-    console.log(user.dp)
     
-    // user.dp = result.url
-    // console.log(user.dp)
     await user.save()
     
 
