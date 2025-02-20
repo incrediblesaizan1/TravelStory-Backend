@@ -13,6 +13,7 @@ const fs = require("fs");
 const path = require("path");
 const fileUpload = require("express-fileupload");
 const uploadToCloudinary = require("./cloudinary");
+const userModel = require("./models/user.model");
 
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
@@ -337,6 +338,64 @@ app.post("/image-upload", async (req, res) => {
         message: error.message || "Unknown error occurred",
       });
   }
+});
+
+app.post("/dp",isLoggedIn, async (req, res) => {
+  try {
+    if (!req.files?.image) {
+      return res
+        .status(400)
+        .json({ Error: true, message: "No Image Uploaded" });
+    }
+
+    const imageFile = req.files.image;
+
+    const result = await uploadToCloudinary(imageFile.data);
+
+    const user = await UserModel.findOne({
+      _id: req.user.id,
+      dp:result.url
+    });
+
+    res.status(200).json({ imageUrl: result.url });
+  } catch (error) {
+    console.error("Upload Error:", error); 
+    res
+      .status(500)
+      .json({
+        Error: true,
+        message: error.message || "Unknown error occurred",
+      });
+  }
+
+
+  try {
+    
+
+    if (!travelStory) {
+      return res
+        .status(404)
+        .json({ Error: true, message: "Travel story not found" });
+    }
+
+    const placeHolderImgUrl =
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTS7c-zKeZDyCPmpNh8li9OMWH4KIBlagiu5w&s";
+
+    travelStory.title = title;
+    travelStory.story = story;
+    travelStory.visitedLocation = visitedLocation;
+    travelStory.imageUrl = imageUrl || placeHolderImgUrl;
+    travelStory.visitedDate = parsedVisitedDate;
+
+    await travelStory.save();
+    res
+      .status(200)
+      .json({ story: travelStory, message: "update successfully" });
+  } catch (error) {
+    res.status(500).json({ Error: true, message: error.message });
+  }
+
+
 });
 
 app.delete("/image-delete", isLoggedIn, async (req, res) => {
