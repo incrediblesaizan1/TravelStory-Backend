@@ -344,21 +344,24 @@ app.post("/image-upload", async (req, res) => {
 app.post("/dp",isLoggedIn, async (req, res) => {
   try {
     
-    const user = await userModel.findOne({
-      id: req.user.id
-    })
-
     if (!req.files || !req.files.image) {
+      const user = await userModel.findOne({
+        id: req.user.id
+      })
       user.dp = ""; 
       await user.save();
       return res.status(200).json({ imageUrl: "" });
     }
 
+   
     const imageFile = req.files.image;
 
     const result = await uploadToCloudinary(imageFile.data);
 
-    user.dp = result.url
+    const user = await userModel.findOneAndUpdate({
+      id: req.user.id,
+      dp: result.url
+    })
     
     await user.save() 
     
