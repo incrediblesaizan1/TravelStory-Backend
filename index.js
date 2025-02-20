@@ -59,7 +59,7 @@ app.get("/", (req, res) => {
 
 app.post("/signup", async (req, res) => {
   try {
-    const { fullname, username, email, password } = req.body;
+    const { fullname, username, email, password,dp } = req.body;
 
     if (!fullname || !username || !email || !password) {
       return res
