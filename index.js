@@ -14,6 +14,7 @@ const path = require("path");
 const fileUpload = require("express-fileupload");
 const uploadToCloudinary = require("./cloudinary");
 const userModel = require("./models/user.model");
+const { use } = require("bcrypt/promises");
 
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
@@ -352,10 +353,16 @@ app.post("/dp",isLoggedIn, async (req, res) => {
 
     const result = await uploadToCloudinary(imageFile.data);
 
-    const user = await UserModel.findOne({
+    const user = await UserModel.findOneAndUpdate({
       _id: req.user.id,
-      dp:result.url
+      dp: result.url
     });
+    console.log(user.dp)
+    
+    // user.dp = result.url
+    // console.log(user.dp)
+    await user.save()
+    
 
     res.status(200).json({ imageUrl: result.url });
   } catch (error) {
