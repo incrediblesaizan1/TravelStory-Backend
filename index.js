@@ -341,43 +341,35 @@ app.post("/image-upload", async (req, res) => {
   }
 });
 
-app.post("/dp",isLoggedIn, async (req, res) => {
+app.post("/dp", isLoggedIn, async (req, res) => {
   try {
-    
     if (!req.files || !req.files.image) {
-      const user = await userModel.findOne({
-        id: req.user.id
-      })
-      user.dp = ""; 
-      await user.save();
+      const user = await userModel.findOne({ id: req.user.id });
+      if (user) {
+        user.dp = "";
+        await user.save();
+      }
       return res.status(200).json({ imageUrl: "" });
     }
 
-   
     const imageFile = req.files.image;
-
     const result = await uploadToCloudinary(imageFile.data);
 
-    const user = await userModel.findOneAndUpdate({
-      id: req.user.id,
-      dp: result.url
-    })
-    
-    await user.save() 
-    
+    const user = await userModel.findOne({ id: req.user.id });
+
+    if (user) {
+      user.dp = result.url;
+      await user.save();
+    }
 
     res.status(200).json({ imageUrl: result.url });
   } catch (error) {
-    console.error("Upload Error:", error); 
-    res
-      .status(500)
-      .json({
-        Error: true,
-        message: error.message || "Unknown error occurred",
-      });
+    console.error("Upload Error:", error);
+    res.status(500).json({
+      Error: true,
+      message: error.message || "Unknown error occurred",
+    });
   }
-
-
 });
 
 app.delete("/image-delete", isLoggedIn, async (req, res) => {
