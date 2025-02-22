@@ -14,7 +14,6 @@ const path = require("path");
 const fileUpload = require("express-fileupload");
 const uploadToCloudinary = require("./cloudinary");
 const userModel = require("./models/user.model");
-const { use } = require("bcrypt/promises");
 
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
@@ -65,7 +64,7 @@ app.post("/signup", async (req, res) => {
 
     if (!fullname || !username || !email || !password) {
       return res
-        .status(400)
+        .status(400)  
         .json({ Error: true, message: "All fields are required" });
     }
 
