@@ -48,8 +48,7 @@ app.use(
     },
     credentials: true, // Allow credentials (cookies & headers)
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    // allowedHeaders: ["Content-Type", "accesstoken"], 
-    allowedHeaders: "*",
+    allowedHeaders: ["Content-Type", "accesstoken"], 
   })
 );
 app.options("*", cors());
