@@ -5,7 +5,6 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const cookieParser = require("cookie-parser");
 const UserModel = require("./models/user.model");
 const travelstoriesModel = require("./models/TravelStories.model");
 const isLoggedIn = require("./middelware/isLoggedIn.middleware");
@@ -51,7 +50,6 @@ app.use(
     allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
-app.use(cookieParser());
 app.options("*", cors());
 
 app.get("/", (req, res) => {
@@ -93,15 +91,10 @@ app.post("/signup", async (req, res) => {
     );
 
     return res
-      .cookie("accessToken", accessToken, {
-        httpOnly: true,
-        secure: true, // Use `false` for localhost, `true` for production
-        sameSite: "none",
-      })
       .status(200)
       .json({
         Error: false,
-        user: { fullname: newUser.fullname, email: newUser.email },
+        user: { fullname: newUser.fullname, email: newUser.email,accessToken },
         message: "User Registered successfully",
       });
   } catch (error) {
@@ -136,16 +129,11 @@ app.post("/login", async (req, res) => {
     );
 
     return res
-      .cookie("accessToken", accessToken, {
-        httpOnly: true,
-        secure: true, // Use `false` for localhost, `true` for production
-        sameSite: "none",
-      })
       .status(200)
       .json({
         Error: false,
         message: "You Logged In Successfully",
-        user: { fullname: user.fullname, email: user.email },
+        user: { fullname: user.fullname, email: user.email,accessToken },
       });
   } catch (error) {
     console.log("Something went wrong while login user", error);
@@ -154,11 +142,6 @@ app.post("/login", async (req, res) => {
 });
 
 app.get("/logout", isLoggedIn, async (req, res) => {
-  res.cookie("accessToken", " ", {
-    httpOnly: true,
-    secure: true, // Use `false` for localhost, `true` for production
-    sameSite: "none",
-  });
   res.json({ message: "you logged out successfully." });
 });
 
