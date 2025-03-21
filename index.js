@@ -42,12 +42,13 @@ app.use(
       if (!origin || allowedOrigins.includes(origin)) {
         callback(null, true);
       } else {
-        callback(new Error("Not allowed by CORS"));
+        console.error("Blocked by CORS:", origin);
+        return callback(new Error("Not allowed by CORS"), false);
       }
     },
-    credentials: true,
+    credentials: true, // Allow credentials (cookies & headers)
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
+    allowedHeaders: ["Content-Type", "Authorization"], // Ensure Authorization is allowed
   })
 );
 app.options("*", cors());
