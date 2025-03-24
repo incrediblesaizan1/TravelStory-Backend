@@ -30,7 +30,7 @@ mongoose
 const allowedOrigins = [
   "http://localhost:5173",
   "http://localhost:5174",
-  "https://incrediblesaizan1-travel-stories.vercel.app",
+  "https://travel-tale-sk.vercel.app",
 ];
 
 app.use(express.json());
